@@ -299,6 +299,7 @@ public extension Conversation {
 /// Event handling private API
 private extension Conversation {
 	@MainActor func handleEvent(_ event: ServerEvent) {
+        print("---> openAI event: \(event)")
 		switch event {
 			case let .error(event):
 				errorStream.yield(event.error)
