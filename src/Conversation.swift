@@ -147,7 +147,11 @@ public final class Conversation: @unchecked Sendable {
 	/// Send a client event to the server.
 	/// > Warning: This function is intended for advanced use cases. Use the other functions to send messages and audio data.
 	public func send(event: ClientEvent) async throws {
-		try await client.send(event: event)
+        do {
+            try await client.send(event: event)
+        } catch {
+            print("---> error send(event): \(error.localizedDescription)")
+        }
 	}
 
 	/// Manually append audio bytes to the conversation.
@@ -155,7 +159,14 @@ public final class Conversation: @unchecked Sendable {
 	/// > Note: The `Conversation` class can automatically handle listening to the user's mic and playing back model responses.
 	/// > To get started, call the `startListening` function.
 	public func send(audioDelta audio: Data, commit: Bool = false) async throws {
-		try await send(event: .appendInputAudioBuffer(encoding: audio))
+        do {
+            try await send(event: .appendInputAudioBuffer(encoding: audio))
+            print("---> commit: \(commit)")
+            print("---> audio: \(audio.count)")
+        } catch {
+            print("---> error send(audioDelta): \(error.localizedDescription)")
+        }
+
 		if commit { try await send(event: .commitInputAudioBuffer()) }
 	}
 
